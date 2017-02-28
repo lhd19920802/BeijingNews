@@ -164,6 +164,7 @@ public class GuideActivity extends Activity
             container.addView(imageView);
 
             return imageView;
+
         }
 
         @Override

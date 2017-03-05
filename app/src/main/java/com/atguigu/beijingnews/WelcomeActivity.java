@@ -9,6 +9,8 @@ import android.view.animation.AnimationSet;
 import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
 
+import com.atguigu.beijingnews.utils.CacheUtils;
+
 /**
  * 欢迎界面
  */
@@ -55,7 +57,7 @@ public class WelcomeActivity extends Activity
         animationSet.addAnimation(alphaAnimation);
         animationSet.addAnimation(rotateAnimation);
 
-        findViewById(R.id.rl_main).startAnimation(animationSet);
+        findViewById(R.id.rl_welcome).startAnimation(animationSet);
 
         //设置动画的监听
         animationSet.setAnimationListener(new Animation.AnimationListener()
@@ -69,8 +71,21 @@ public class WelcomeActivity extends Activity
             @Override
             public void onAnimationEnd(Animation animation)
             {
-                //启动向导页面
-                startGuideActivity();
+                boolean isEnterMain= CacheUtils.getBoolean(WelcomeActivity.this, GuideActivity
+                        .START_MAIN);
+                if(isEnterMain) {
+                    //进入过主页面
+                    Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
+                else
+                {
+                    //没有进入过主页面 进入向导页面
+                    //启动向导页面
+                    startGuideActivity();
+
+                }
+
                 //关闭当前页面
                 finish();
             }

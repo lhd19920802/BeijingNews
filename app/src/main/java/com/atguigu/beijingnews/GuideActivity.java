@@ -1,6 +1,7 @@
 package com.atguigu.beijingnews;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -8,10 +9,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.atguigu.beijingnews.utils.CacheUtils;
 import com.atguigu.beijingnews.utils.DensityUtil;
 
 import java.util.ArrayList;
@@ -20,10 +23,12 @@ import java.util.List;
 public class GuideActivity extends Activity
 {
     private static final String TAG = GuideActivity.class.getSimpleName();
+    public static final String START_MAIN = "start_main";
     private ViewPager vp_guide;
     private List<ImageView> imageViews = new ArrayList<>();
     private LinearLayout ll_guide;
     private ImageView iv_guide_red;
+    private Button btn_guide_start;
 
     //两点间距
     private int pointDistance=0;
@@ -50,7 +55,7 @@ public class GuideActivity extends Activity
     private void showGuide()
     {
         //提供数据
-        int[] datas = {R.drawable.guide_1, R.drawable.guide_2, R.drawable.guide_3};
+        final int[] datas = {R.drawable.guide_1, R.drawable.guide_2, R.drawable.guide_3};
         for (int i = 0; i < datas.length; i++)
         {
             ImageView imageView = new ImageView(this);
@@ -111,8 +116,8 @@ public class GuideActivity extends Activity
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
             {
                 //得到移动的距离  带移动过程
-//                moveDistance = (int) (pointDistance * positionOffset+position*pointDistance);
-                moveDistance = (int) (position*pointDistance);//不带移动过程
+                moveDistance = (int) (pointDistance * positionOffset+position*pointDistance);
+//                moveDistance = (int) (position*pointDistance);//不带移动过程
 
                 RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(screenPoint,screenPoint);
                 //移动原理
@@ -123,7 +128,25 @@ public class GuideActivity extends Activity
             @Override
             public void onPageSelected(int position)
             {
-
+                if(position==datas.length-1) {
+                    btn_guide_start.setVisibility(View.VISIBLE);
+                    btn_guide_start.setOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            //保存进入主页面的标识
+                            CacheUtils.putBoolean(GuideActivity.this, START_MAIN, true);
+                            Intent intent = new Intent(GuideActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    });
+                }
+                else
+                {
+                    btn_guide_start.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -140,6 +163,7 @@ public class GuideActivity extends Activity
         ll_guide = (LinearLayout) findViewById(R.id.ll_guide);
 
         iv_guide_red = (ImageView)findViewById(R.id.iv_guide_red);
+        btn_guide_start = (Button) findViewById(R.id.btn_guide_start);
     }
 
     class GuideAdapter extends PagerAdapter

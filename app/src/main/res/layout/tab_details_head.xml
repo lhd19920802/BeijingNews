@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+    >
+
+    <com.atguigu.beijingnews.view.HorizontalScrollViewPager
+        android:id="@+id/vp_tab_details"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        ></com.atguigu.beijingnews.view.HorizontalScrollViewPager>
+
+    <RelativeLayout
+        android:id="@+id/rl_tab_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/vp_tab_details"
+        android:background="#aaaaaa"
+        >
+
+        <TextView
+            android:id="@+id/tv_tab_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:padding="5dp"
+            android:text="来自星星的你"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            />
+
+
+        <LinearLayout
+            android:id="@+id/ll_tab_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:orientation="horizontal"
+            />
+
+    </RelativeLayout>
+</RelativeLayout>
+

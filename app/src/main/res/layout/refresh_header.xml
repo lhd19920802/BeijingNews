@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/ll_refresh_header"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        >
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/iv_refresh_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/common_listview_headview_red_arrow"
+                android:padding="5dp"
+                android:layout_gravity="center"
+                />
+            <ProgressBar
+                android:id="@+id/pb_refresh_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminateDuration="1000"
+                android:indeterminateDrawable="@drawable/pb_head_refresh"
+                android:visibility="gone"
+                />
+
+        </FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            >
+            <TextView
+                android:id="@+id/tv_refresh_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="下拉刷新..."
+                android:textSize="18sp"
+                android:textColor="#ff0000"
+                />
+            <TextView
+                android:id="@+id/tv_refresh_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="上次刷新时间2017-03-03"
+                android:textSize="18sp"
+                android:layout_marginTop="5dp"
+                />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

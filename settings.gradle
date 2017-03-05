@@ -1,1 +1,3 @@
-include ':app'
+include ':app', ':slidinglibrary', ':xutils_library'
+include ':ViewPagerIndicatorSample'
+include ':indicatorlibrary'

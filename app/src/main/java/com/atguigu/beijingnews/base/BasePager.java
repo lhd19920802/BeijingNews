@@ -20,6 +20,7 @@ public class BasePager
     public TextView tv_base_pager;
     public ImageView iv_title_button;
     public FrameLayout fl_base_pager;
+    public ImageView iv_title_switch;
 
 
     public BasePager(Context context)
@@ -36,6 +37,7 @@ public class BasePager
         iv_title_button = (ImageView) view.findViewById(R.id.iv_title_button);
         fl_base_pager = (FrameLayout) view.findViewById(R.id.fl_base_pager);
 
+        iv_title_switch = (ImageView) view.findViewById(R.id.iv_title_switch);
 
         return view;
     }

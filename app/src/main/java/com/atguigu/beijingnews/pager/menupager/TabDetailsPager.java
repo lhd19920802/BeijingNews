@@ -3,6 +3,8 @@ package com.atguigu.beijingnews.pager.menupager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -206,6 +208,17 @@ public class TabDetailsPager extends MenuDetailsPager
 
     }
 
+    private Handler handler = new Handler()
+    {
+        public void handleMessage(Message msg)
+        {
+            int item = (vp_tab_details.getCurrentItem()+1) % topnews.size();
+            vp_tab_details.setCurrentItem(item);
+            handler.removeCallbacksAndMessages(null);
+            handler.sendEmptyMessageDelayed(0, 2000);
+        }
+    };
+
     private void processData(String json)
     {
         tabDetailsBean = parseData(json);
@@ -251,6 +264,11 @@ public class TabDetailsPager extends MenuDetailsPager
             news.addAll(moreNews);
             adapter.notifyDataSetChanged();
         }
+
+        //解析成功以后实现轮播图自动播放
+
+            handler.sendEmptyMessageDelayed(0, 2000);
+
 
 
     }
@@ -350,7 +368,18 @@ public class TabDetailsPager extends MenuDetailsPager
         @Override
         public void onPageScrollStateChanged(int state)
         {
+           switch (state) {
+               case ViewPager.SCROLL_STATE_IDLE :
+                   handler.removeCallbacksAndMessages(null);
+                   handler.sendEmptyMessageDelayed(0, 2000);
+                   break;
+               case ViewPager.SCROLL_STATE_DRAGGING :
+                    handler.removeCallbacksAndMessages(null);
+                   break;
+               case ViewPager.SCROLL_STATE_SETTLING :
 
+                   break;
+           }
         }
     }
 

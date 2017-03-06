@@ -1,6 +1,8 @@
 package com.atguigu.beijingnews;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -21,6 +23,8 @@ public class NewsDetailsActivity extends Activity implements View.OnClickListene
     private ImageButton ivTitleShare;
     private ProgressBar pb_news_details;
     private WebView wv_news_details;
+    private int position=2;
+    private WebSettings settings;
 
     /**
      * Find the Views in the layout<br />
@@ -65,11 +69,61 @@ public class NewsDetailsActivity extends Activity implements View.OnClickListene
         }
         else if (v == ivTitleTextSize)
         {
+            String[] items={"超大字体","大字体","正常字体","小字体","超小字体"};
+            new AlertDialog.Builder(this)
+                        .setTitle("改变字体")
+                        .setSingleChoiceItems(items, position, new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                position=which;
+                            }
+                        })
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                changeTextSize(position);
+                            }
+                        })
+                        .setNegativeButton("取消", null)
+                        .show();
             // Handle clicks for ivTitleTextSize
         }
         else if (v == ivTitleShare)
         {
             // Handle clicks for ivTitleShare
+        }
+    }
+
+    /**
+     * 改变字体大小
+     * @param position
+     */
+    private void changeTextSize(int position)
+    {
+        switch (position) {
+            case 0 :
+                settings.setTextZoom(200);
+                break;
+            case 1 :
+                settings.setTextZoom(150);
+
+                break;
+            case 2 :
+                settings.setTextZoom(100);
+
+                break;
+            case 3 :
+                settings.setTextZoom(75);
+
+                break;
+            case 4 :
+
+                settings.setTextZoom(50);
+                break;
         }
     }
 
@@ -81,7 +135,7 @@ public class NewsDetailsActivity extends Activity implements View.OnClickListene
         setContentView(R.layout.activity_news_details);
         findViews();
         String url = getIntent().getStringExtra("url");
-        url="http://www.atguigu.com/";
+//        url="http://www.atguigu.com/";
         if (!TextUtils.isEmpty(url))
         {
             wv_news_details.loadUrl(url);
@@ -94,10 +148,10 @@ public class NewsDetailsActivity extends Activity implements View.OnClickListene
             public void onPageFinished(WebView view, String url)
             {
                 super.onPageFinished(view, url);
-                pb_news_details.setVisibility(View.VISIBLE);
+                pb_news_details.setVisibility(View.GONE);
             }
         });
-        WebSettings settings = wv_news_details.getSettings();
+        settings = wv_news_details.getSettings();
         settings.setUseWideViewPort(true);
         settings.setJavaScriptEnabled(true);
         settings.setBuiltInZoomControls(true);

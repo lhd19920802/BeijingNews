@@ -8,6 +8,14 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.atguigu.beijingnews.MainActivity;
 import com.atguigu.beijingnews.base.BasePager;
 import com.atguigu.beijingnews.domain.NewsBean;
@@ -24,6 +32,7 @@ import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +43,7 @@ import java.util.List;
 public class NewsPager extends BasePager
 {
 
-    public static final String TAG=NewsPager.class.getSimpleName();
+    public static final String TAG = NewsPager.class.getSimpleName();
 
     public List<MenuDetailsPager> menuDetailsPagers;
     private List<NewsBean.DataBean> data;
@@ -44,7 +53,6 @@ public class NewsPager extends BasePager
         super(context);
 
     }
-
 
 
     @Override
@@ -60,16 +68,62 @@ public class NewsPager extends BasePager
         fl_base_pager.addView(textView);
 
 
-
-
         //联网之前判断是否有缓存
-        String saveJson=CacheUtils.getString(context,UrlUtils.CATE_URL);
-        if(!TextUtils.isEmpty(saveJson))
+        String saveJson = CacheUtils.getString(context, UrlUtils.CATE_URL);
+        if (!TextUtils.isEmpty(saveJson))
         {
             processData(saveJson);
         }
-        getDataFromNet();
+        //        getDataFromNet();
 
+        getDataFromNetByVollay();
+    }
+
+    private void getDataFromNetByVollay()
+    {
+        RequestQueue queue = Volley.newRequestQueue(context);
+        StringRequest request = new StringRequest(Request.Method.GET, UrlUtils.CATE_URL, new
+                Response.Listener<String>()
+        {
+            @Override
+            public void onResponse(String result)
+            {
+                Log.e(TAG, "result:" + result);
+                //缓存数据
+                CacheUtils.putString(context, UrlUtils.CATE_URL, result);
+                Log.e("TAG", "缓存数据成功==");
+                processData(result);
+
+
+                switchPager(0);
+            }
+        }, new Response.ErrorListener()
+        {
+            @Override
+            public void onErrorResponse(VolleyError error)
+            {
+                Log.e(TAG, "error:" + error);
+            }
+        })
+        {
+            @Override
+            protected Response<String> parseNetworkResponse(NetworkResponse response)
+            {
+                try
+                {
+                    String parsed = new String(response.data, "UTF-8");
+                    return Response.success(parsed, HttpHeaderParser.parseCacheHeaders(response));
+
+                }
+                catch (UnsupportedEncodingException e)
+                {
+                    e.printStackTrace();
+                }
+                return super.parseNetworkResponse(response);
+            }
+        };
+
+        queue.add(request);
     }
 
     private void getDataFromNet()
@@ -85,8 +139,6 @@ public class NewsPager extends BasePager
                 CacheUtils.putString(context, UrlUtils.CATE_URL, result);
                 Log.e("TAG", "缓存数据成功==");
                 processData(result);
-
-
 
 
                 switchPager(0);
@@ -119,6 +171,7 @@ public class NewsPager extends BasePager
 
     /**
      * 解析数据
+     *
      * @param result
      */
     private void processData(String result)
@@ -133,7 +186,7 @@ public class NewsPager extends BasePager
         leftMenuFragment.setData(data);
 
         menuDetailsPagers = new ArrayList<>();
-        menuDetailsPagers.add(new NewsMenuDetail(context,data.get(0).getChildren()));
+        menuDetailsPagers.add(new NewsMenuDetail(context, data.get(0).getChildren()));
         menuDetailsPagers.add(new TopicMenuDetail(context));
         menuDetailsPagers.add(new PicMenuDetail(context));
         menuDetailsPagers.add(new ContactMenuDetail(context));
@@ -141,16 +194,24 @@ public class NewsPager extends BasePager
 
 
     //根据指定的位置切换到不同的页面
-    public void switchPager(int position)
+    public void switchPager(final int position)
     {
         //设置标题
         tv_base_pager.setText(data.get(position).getTitle());
         MenuDetailsPager menuDetailsPager = menuDetailsPagers.get(position);
-        View rootView=menuDetailsPager.rootView;
+        View rootView = menuDetailsPager.rootView;
         menuDetailsPager.initData();
 
         fl_base_pager.removeAllViews();
 
         fl_base_pager.addView(rootView);
+        if (position == 2)
+        {
+            iv_title_switch.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            iv_title_switch.setVisibility(View.GONE);
+        }
     }
 }
